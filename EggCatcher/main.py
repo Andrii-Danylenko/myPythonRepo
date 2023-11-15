@@ -16,6 +16,7 @@ random.shuffle(colors)
 catcher = Catcher(canvas, colors[0], score)
 eggs = []
 while True:
+    catcher.canvas.update_idletasks()
     if score.lost == 10:
         break
     catcher.draw()

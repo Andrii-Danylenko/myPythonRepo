@@ -19,6 +19,8 @@ def game(gameWindow, canvas, btn1) -> None:
     event_handler = EventHandler(gameWindow)
     isRendered = False
     score = Score()
+    scoreText = canvas.create_text(170, 50, anchor=NW, text=f"Балів: {score.getCurrent()}",
+                                   font="Arial 20", fill="#FF0000", tags="points")
 
     def restart_game():
         gameWindow.destroy()
@@ -26,17 +28,13 @@ def game(gameWindow, canvas, btn1) -> None:
 
     while True:
         if not isRendered:
-            canvas.create_text(170, 50, anchor=NW, text=f"Балів: {score.getCurrent()}",
-                               font="Arial 20", fill="#FF0000", tags="points")
             isRendered = True
-
         if not event_handler.is_active:
             break
         if not ball.hit_bottom:
             ball.draw()
             if ball.hit_floor:
-                canvas.delete("points")
-                score.incrementAndGet()
+                canvas.itemconfig(scoreText, text=f"Балів: {score.incrementAndGet()}")
                 ball.hit_floor = False
                 isRendered = False
             paddle.draw()

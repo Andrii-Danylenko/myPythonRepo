@@ -4,30 +4,38 @@ class Paddle:
         self.id = canvas.create_rectangle(0, 0, 100, 10, fill=color)
         self.canvas.move(self.id, 200, 300)
         self.x = 0
-        self.offset = 2
+        self.offset = 3
         self.speedOffset = 2
+        self.maxSpeed = 5
         self.canvas_width = self.canvas.winfo_width()
         self.canvas.bind_all('<KeyPress-Left>', self.turn_left)
+        self.canvas.bind_all('<KeyRelease-Left>', self.stop)
         self.canvas.bind_all('<KeyPress-Right>', self.turn_right)
-
+        self.canvas.bind_all('<KeyRelease-Right>', self.stop)
         self.speed = 0
 
     def turn_left(self, event):
-        self.x = -self.offset
-        self.speed = self.speedOffset
+        if self.canvas.coords(self.id)[0] > 0 + self.maxSpeed + self.offset:
+            self.x -= min(self.offset - self.offset * 0.1, self.maxSpeed)
+            self.speed += self.speedOffset * 0.1
 
     def turn_right(self, event):
-        self.x = self.offset
-        self.speed = self.speedOffset
+        currOffset = min(self.offset + self.offset * 0.1, self.maxSpeed)
+        if self.canvas.coords(self.id)[2] <= self.canvas.winfo_width() - (self.maxSpeed + self.offset):
+            self.x += currOffset
+            self.speed += self.speedOffset * 0.1
 
     def draw(self):
         self.canvas.move(self.id, self.x, 0)
-        pos = self.canvas.coords(self.id)
-        if pos[0] <= 0 or pos[2] >= self.canvas_width:
-            self.stop()
+        if self.__getPos__(0) <= 0 or self.__getPos__(2) >= self.canvas.winfo_width():
+            self.stop(event=0)
 
-    def stop(self):
+    def __getPos__(self, value):
+        return self.canvas.coords(self.id)[value]
+
+    def stop(self, event):
         self.x = 0
+        self.speed = 0
 
     def get_speed(self):
         return self.speed

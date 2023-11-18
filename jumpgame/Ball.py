@@ -15,6 +15,7 @@ class Ball:
         random.shuffle(starts)
         self.x = starts[0]
         self.y = -1
+        self.maxSpeed = 4
         self.canvas_height = self.canvas.winfo_height()
         self.canvas_width = self.canvas.winfo_width()
         self.hit_bottom = False
@@ -37,7 +38,7 @@ class Ball:
             self.hit_bottom = True
         if self.hit_paddle(pos):
             paddle_speed = self.paddle.get_speed()
-            self.y = -1 - int(paddle_speed * 3)
+            self.y = -1 - min(int(paddle_speed * 3), self.maxSpeed)
         if pos[0] <= 0:
             self.x = 3
         if pos[2] >= self.canvas_width:
